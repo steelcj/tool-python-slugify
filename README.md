@@ -38,11 +38,23 @@ cd ~/bin
 git clone https://github.com/steelcj/tool-python-slugify.git slugify-tool
 ```
 
+Install bash wrapper to `~/bin`
 
+```bash
+cp slugify-tool/scripts/nix/slug .
+chmod +x slug
+slug "This is a multilingual test Référence API"
+```
 
-## Development
+output example:
 
-Slighly out of date...
+```bash
+this-is-a-multilingual-test-reference-api
+```
+
+## Development Stuff
+
+Slighly out of date... to be moved to docs dir
 
 ## Manual Installation and Creation
 
