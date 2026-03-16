@@ -1,0 +1,6 @@
+lowercase: true
+separator: "-"
+ascii: true
+max_length: 80
+stopwords: []
+
