@@ -92,13 +92,20 @@ def read_input(args):
 def main():
 
     parser = argparse.ArgumentParser(
-        description="Convert text into a URL-safe slug."
+        description="Convert text into a URL-safe slug.",
+        epilog=(
+            "Tip: use single quotes to safely pass strings containing\n"
+            "backticks or other shell-special characters:\n\n"
+            "  slug 'What belongs in `trust_boundary.yml`'\n\n"
+            "Double quotes do NOT protect backticks from shell expansion."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
     parser.add_argument(
         "text",
         nargs="*",
-        help="Text to convert"
+        help="Text to slugify (use single quotes for special characters)"
     )
 
     parser.add_argument(
