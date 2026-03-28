@@ -1,14 +1,29 @@
 # ROADMAP
 
-# ROADMAP — slug Tool
+## ROADMAP — slug Tool
 
 This document outlines the development roadmap for the **slug** command-line tool, including current functionality and planned improvements. It also includes implementation guidance for future enhancements.
 
 The goal of this tool is to provide a **stable, multilingual slug generation utility** for documentation systems, static site generators, and metadata workflows.
 
----
+## Adjustments
 
-# Current Status — Version 1
+### Handling quotes in provided strings
+ 
+For example both of these prompt give errors
+
+```bash
+slug What belongs in `trust_boundary.yml`
+trust_boundary.yml: command not found
+what-belongs-in
+```
+AND
+```bash
+slug "What belongs in `trust_boundary.yml`"
+trust_boundary.yml: command not found
+what-belongs-in
+```
+## Current Status — Version 1
 
 Version 1 focuses on the principle:
 
