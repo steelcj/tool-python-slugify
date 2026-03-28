@@ -6,23 +6,8 @@ This document outlines the development roadmap for the **slug** command-line too
 
 The goal of this tool is to provide a **stable, multilingual slug generation utility** for documentation systems, static site generators, and metadata workflows.
 
-## Adjustments
+---
 
-### Handling quotes in provided strings
- 
-For example both of these prompt give errors
-
-```bash
-slug What belongs in `trust_boundary.yml`
-trust_boundary.yml: command not found
-what-belongs-in
-```
-AND
-```bash
-slug "What belongs in `trust_boundary.yml`"
-trust_boundary.yml: command not found
-what-belongs-in
-```
 ## Current Status — Version 1
 
 Version 1 focuses on the principle:
@@ -43,7 +28,7 @@ The tool currently provides reliable slug generation with support for pipelines 
 
 Example usage:
 
-```
+```bash
 slug "Référence API"
 ```
 
@@ -55,7 +40,7 @@ reference-api
 
 Pipeline usage:
 
-```
+```bash
 echo "Accessibilité numérique" | slug
 ```
 
@@ -79,13 +64,7 @@ Example working layout:
     ├── slugify_cli.py
 ```
 
-The wrapper command:
-
-```
-~/bin/slug
-```
-
-executes the Python CLI tool inside the virtual environment.
+The wrapper command `~/bin/slug` executes the Python CLI tool inside the virtual environment.
 
 ---
 
@@ -112,6 +91,8 @@ stopwords:
 
 Configuration controls slug generation behavior.
 
+---
+
 ## Version 1.1 Goals
 
 A couple of these goals may be better served with other tools...
@@ -125,7 +106,7 @@ The goal is to improve reliability, usability, and integration with documentatio
 Planned improvements which may require changes to this script:
 
 - ingress: Automated Markdown title extraction
-- egress : sidecar metadata filename generation
+- egress: sidecar metadata filename generation
 - improved configuration handling
 - multilingual presets
 - validation mode
@@ -396,6 +377,25 @@ Development follows three phases:
 Version 1 satisfies phase one.
 
 Future work should prioritize **stability and documentation workflows** before expanding functionality.
+
+---
+
+## Resolved
+
+### #1 — Backtick and special characters cause shell substitution
+
+**Status:** Resolved in v1.0.1 — PR #1
+
+Backticks inside double quotes are interpreted by bash as command substitution before `slug` receives the input. This is shell behavior, not a bug in the wrapper or Python script.
+
+**Resolution:** Added single-quote guidance to `--help` output via `argparse` epilog.
+
+Correct usage for strings containing backticks or special characters:
+
+```bash
+slug 'What belongs in `trust_boundary.yml`'
+# → what-belongs-in-trust-boundary-yml
+```
 
 ---
 
