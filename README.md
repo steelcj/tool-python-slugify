@@ -43,18 +43,13 @@ Install bash wrapper to `~/bin`
 ```bash
 cp slugify-tool/scripts/nix/slug .
 chmod +x slug
-slug "This is a multilingual test Référence API"
 ```
 
-output example:
+## Installation and Usage
 
-```bash
-this-is-a-multilingual-test-reference-api
-```
+[How to Install and Use a Multilingual Slugify Tool with Python Virtual Environment](docs/how-to-install-and-use-the-multilingual-slugify-tool.md)
 
 ## Development Stuff
-
-Slighly out of date... to be moved to docs dir
 
 ## Manual Installation and Creation
 

@@ -56,9 +56,7 @@ The tool converts titles into **URL-safe slugs** that work well for:
 
 The instructions assume a Linux or Unix-like system but the Python components work on all platforms.
 
----
-
-# Overview
+## Overview
 
 The tool will:
 
@@ -79,60 +77,78 @@ becomes
 reference-api
 ```
 
----
+## Requirements
 
-# Install Location
+### Python venv
 
-The script will be installed in:
-
-```
-~/bin
+```bash
+sudo apt install python3-pip
 ```
 
-This location is commonly used for personal command-line tools.
+### Python pip
 
----
-
-# Step 1 — Ensure ~/bin Exists
-
+```bash
+sudo apt install python3-venv
 ```
+
+## Installation
+
+### Ensure ~/bin Exists
+
+```bash
 mkdir -p ~/bin
 ```
 
-Add it to your PATH if necessary.
+### Ensure ~/bin is in your PATH ENV
 
-```
-echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
-```
-
-Reload the shell.
-
-```
-source ~/.bashrc
-```
-
-Verify:
-
-```
+```bash
 echo $PATH
 ```
 
----
+#### If not add it to your startup file
 
-# Step 2 — Create Tool Directory
-
-Create a directory for the slugify tool.
-
-```ls- al 
-mkdir -p ~/bin/slugify-tool
-cd ~/bin/slugify-tool
+```bash
+echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
 ```
 
----
+Reload the shell ENV
 
-# Step 3 — Create Python Virtual Environment
+```bash
+source ~/.bashrc
+```
 
-Figure out which version will be installed
+Confirm your path
+
+```bash
+echo $PATH
+```
+
+## Clone or Create Tool Directory
+
+### Create ~/bin
+
+```bash
+mkdir -p ~/bin/
+cd ~/bin/
+```
+
+### Clone the project
+
+```bash
+git clone https://github.com/steelcj/tool-python-slugify.git slugify-tool
+```
+
+## Create the tools python virtual environment
+
+By default the tool uses it's own sand boxed Python virtual environment.
+
+Before creating your python venv sandbox it is generally a good idea to check for the latest versions of python-slugify available before doing this in order to support multiple versions if you are in a development environment.
+
+### python-slugify versions
+
+python-slugify is our primary tool so we will do a version check to see the latest available stable version.
+
+Alternatively, If you want to install the latest version used in the repository you can skip this step
 
 ```bash
 pip index versions python-slugify
@@ -141,40 +157,37 @@ pip index versions python-slugify
 outyput example:
 
 ```bash
-WARNING: pip index is currently an experimental command. It may be removed/changed in a future release without prior warning.
 python-slugify (8.0.4)
 Available versions: 8.0.4, 8.0.3, 8.0.2, 8.0.1, 8.0.0, 7.0.0, 6.1.2, 6.1.1, 6.1.0, 6.0.1, 6.0.0, 5.0.2, 5.0.1, 5.0.0, 4.0.1, 4.0.0, 3.0.6, 3.0.5, 3.0.4, 3.0.3, 3.0.2, 3.0.1, 3.0.0, 2.0.1, 2.0.0, 1.2.6, 1.2.5, 1.2.4, 1.2.3, 1.2.2, 1.2.1, 1.2.0, 1.1.4, 1.1.3, 1.1.2, 1.0.2, 0.1.0, 0.0.9, 0.0.8, 0.0.7, 0.0.6, 0.0.5, 0.0.4, 0.0.3, 0.0.2, 0.0.1
 ```
 
-then:
+Here we see that the latest available version is 8.0.4 so we create a corresponding directory structure for our venv in the slugify tool directory:
 
 ```bash
-mkdir -p .venvs/slugify/8.0.4
+mkdir -p ~/bin/slugify-tool/.venvs/slugify/8.0.4
 ```
 
-Create the environment manually.
+Next we create the tools virtual environment or venv
 
 ```bash
-python3 -m venv --prompt slugify-8.0.4 .venvs/slugify/8.0.4
+python3 -m venv --prompt slugify-8.0.4 ~/bin/slugify-tool/.venvs/slugify/8.0.4
 ```
 
 Activate it.
 
 ```bash
-source .venvs/slugify/8.0.4/bin/activate
+source ~/bin/slugify-tool/.venvs/slugify/8.0.4/bin/activate
 ```
 
-Your prompt should now show:
+Your prompt should now reflect the activated python venv for the slugify tool
 
 ```
 (slugify-8.0.4)
 ```
 
----
+## Install the required python libraries
 
-# Step 4 — Install Required Libraries
-
-Install the libraries used by the slugify tool.
+Now that the venv is activated we can install the libraries used by the slugify tool into the venv like this.
 
 ```bash
 pip install python-slugify
@@ -186,15 +199,12 @@ These provide:
 - robust multilingual slugification
 - optional configuration support
 
----
+## Customising the tool configuration
 
-# Step 5 — Create the Python Script
-
-### Optional Custom Config
-
-Create the config file
+If you ever want the change the settings you can customise the configuration file
 
 ```bash
+cd slugify-tool
 nano config.yml
 ```
 
@@ -208,7 +218,7 @@ max_length: 80
 stopwords: []
 ```
 
-Create the slugify script.
+If you want to customise or take a peek at the slugify script.
 
 ```
 nano slugify_cli.py
@@ -311,13 +321,20 @@ def read_input(args):
 def main():
 
     parser = argparse.ArgumentParser(
-        description="Convert text into a URL-safe slug."
+        description="Convert text into a URL-safe slug.",
+        epilog=(
+            "Tip: use single quotes to safely pass strings containing\n"
+            "backticks or other shell-special characters:\n\n"
+            "  slug 'What belongs in `trust_boundary.yml`'\n\n"
+            "Double quotes do NOT protect backticks from shell expansion."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
     parser.add_argument(
         "text",
         nargs="*",
-        help="Text to convert"
+        help="Text to slugify (use single quotes for special characters)"
     )
 
     parser.add_argument(
@@ -351,37 +368,45 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-Save the file.
-
----
-
-# Step 6 — Make Script Executable
 
 ```
-chmod +x slugify.py
+
+Save the file if you make any changes.
+
+# The launcher script
+
+We are using a basic launcher script so the tool automatically runs inside the our tools virtual environment.
+
+If you cloned the project you can copy it to your ~/bin directory
+
+```bash
+cp scripts/nix/slug ~/bin/.
 ```
 
----
+if you want to take a peek at the contents or modify it to reflect the version you are running you can edit it with something like
 
-# Step 7 — Create a Launcher Script
-
-Create a simple launcher so the tool automatically runs inside the virtual environment.
-
-```
+```bash
 nano ~/bin/slug
 ```
 
-Paste:
+content example:
 
 ```bash
 #!/usr/bin/env bash
 
 SCRIPT_DIR="$HOME/bin/slugify-tool"
 
-source "$SCRIPT_DIR/.venvs/slugify/8.0.4/bin/activate"
+exec "$SCRIPT_DIR/.venvs/slugify/8.0.4/bin/python" \
+     "$SCRIPT_DIR/slugify_cli.py" "$@"
+```
 
+Alternate example:
+
+```bash
+#!/usr/bin/env bash
+
+SCRIPT_DIR="$HOME/bin/slugify-tool"
+source "$SCRIPT_DIR/.venvs/slugify/8.0.4/bin/activate"
 python "$SCRIPT_DIR/slugify_cli.py" "$@"
 ```
 
@@ -391,27 +416,23 @@ Save and make executable:
 chmod +x ~/bin/slug
 ```
 
----
-
-# Step 8 — Test the Tool
+## Confirmation
 
 Run:
 
-```
+```bash
 slug "Changing the Language in GNUCash"
 ```
 
 Output:
 
-```
+```bash
 changing-the-language-in-gnucash
 ```
 
----
+### Test With Multilingual Text
 
-# Test With Multilingual Text
-
-```
+```bash
 slugify "Accessibilité numérique"
 ```
 
@@ -421,9 +442,7 @@ Output:
 accessibilite-numerique
 ```
 
----
-
-# Pipe Input
+### Pipe Input example
 
 ```bash
 echo "Référence API" | slug
@@ -435,13 +454,13 @@ Output:
 reference-api
 ```
 
----
 
-# Example Use in Documentation Workflow
+
+## Use in a documentation workflow
 
 Title in Markdown:
 
-```
+```bash
 # Métadonnées Dublin Core
 ```
 
@@ -457,9 +476,7 @@ Filename:
 metadonnees-dublin-core.md
 ```
 
----
-
-# Optional Configuration (Future)
+## Optional Configurations (Future)
 
 Because the script uses the `python-slugify` library, it can later support YAML configuration.
 
@@ -473,20 +490,16 @@ max_length: 80
 
 This allows customization of slug behavior for specific projects.
 
----
-
-# When This Tool Is Useful
-
-Slug generation tools like this are useful for:
+## Use cases
 
 - multilingual static site generators
 - documentation repositories
 - metadata-driven publishing
 - digital archive systems
 
-They ensure consistent naming conventions across large collections of documents.
+They can be used to ensure consistent naming conventions across large collections of documents.
 
-# Example Usage
+## Additional examples
 
 ### Default behavior
 
@@ -500,8 +513,6 @@ Output
 reference-api
 ```
 
-------
-
 ### Pipe
 
 ```
@@ -513,8 +524,6 @@ Output
 ```
 accessibilite-numerique
 ```
-
-------
 
 ### Override config
 
@@ -535,11 +544,7 @@ Output
 accessibilité_numérique
 ```
 
-------
-
-# Why This Pattern Works Well
-
-This pattern is widely used in CLI tools because:
+## This pattern is widely used in CLI tools because:
 
 • defaults are version-controlled with the script
  • users can override behavior easily
@@ -552,9 +557,7 @@ It also makes your tool easier to evolve into:
 - a **SAT documentation helper**
 - a **metadata/slug workflow tool**
 
----
-
-# References
+## References
 
 <a name="dublin-core-1998-reference"></a>
 Dublin Core Metadata Initiative. (1998). *Dublin Core metadata element set, version 1.1*. https://www.dublincore.org/specifications/dublin-core/dces/
@@ -566,10 +569,8 @@ Tkalec, A. (2024). *python-slugify*. https://github.com/un33k/python-slugify
 
 [Return to citation](#python-slugify-citation)
 
----
-
 ## License
 
-This document, *How to Install and Use a Multilingual Slugify Tool with Python Virtual Environment*, by **Christopher Steel**, with AI assistance from **ChatGPT-5.3 (OpenAI)**, is licensed under the [Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).
+This document, *How to Install and Use a Multilingual Slugify Tool with Python Virtual Environment*, by **Christopher Steel**, with AI editing assistance from **ChatGPT-5.3 (OpenAI)**, is licensed under the [Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).
 
 ![CC License](https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/by-sa.svg)
