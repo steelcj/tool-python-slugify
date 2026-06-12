@@ -33,6 +33,8 @@ Unix-style pipelines.
 
 ### Nix's
 
+Fast install using slugify 8.0.4
+
 ```bash
 cd ~/bin
 git clone https://github.com/steelcj/tool-python-slugify.git slugify-tool
@@ -45,72 +47,31 @@ cp slugify-tool/scripts/nix/slug .
 chmod +x slug
 ```
 
-## Installation and Usage
-
-[How to Install and Use a Multilingual Slugify Tool with Python Virtual Environment](docs/how-to-install-and-use-the-multilingual-slugify-tool.md)
-
-## Development Stuff
-
-## Manual Installation and Creation
-
-### 1. Create the tool directory
-
-```
-mkdir -p ~/bin/slugify-tool
+```bash
+mkdir -p ~/bin/slugify-tool/.venvs/slugify/8.0.4
 ```
 
-Place the following files inside the directory:
+Next we create the tools virtual environment or venv
 
-```
-slugify_cli.py
-config.yml
-```
+    python3 -m venv --prompt slugify-8.0.4 ~/bin/slugify-tool/.venvs/slugify/8.0.4
 
----
+Activate it.
 
-### 2. Create a Python virtual environment
+    source ~/bin/slugify-tool/.venvs/slugify/8.0.4/bin/activate
 
-```
-python3 -m venv --prompt slugify-8.0.4 ~/.venvs/slugify/8.0.4
-```
+Your prompt should now reflect the activated python venv for the slugify tool
 
-Install required packages:
+    (slugify-8.0.4)
 
-```
-~/.venvs/slugify/8.0.4/bin/pip install python-slugify==8.0.4 pyyaml
-```
-
----
-
-### 3. Create the wrapper command
-
-Create the command:
-
-```
-~/bin/slug
-```
-
-Contents:
+Install requirements
 
 ```bash
-#!/usr/bin/env bash
-
-SCRIPT_DIR="$HOME/bin/slugify-tool"
-
-source "$SCRIPT_DIR/.venvs/slugify/8.0.4/bin/activate"
-
-python "$SCRIPT_DIR/slugify_cli.py" "$@"
+pip install -r slugify-tool/requirements.txt
 ```
 
-Make it executable:
+## Detailed Installation, Usage and Configuration
 
-```
-chmod +x ~/bin/slug
-```
-
-Ensure `~/bin` is in your PATH.
-
----
+[How to Install and Use a Multilingual Slugify Tool with Python Virtual Environment](docs/how-to-install-and-use-the-multilingual-slugify-tool.md)
 
 ## Usage
 
